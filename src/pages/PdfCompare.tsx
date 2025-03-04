@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { diffWords } from 'diff';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -202,6 +202,12 @@ export default function PdfCompare() {
         }
     };
 
+    useEffect(() => {
+        if (pdf1 && pdf2) {
+            comparePdfs();
+        }
+    }, [pdf1, pdf2]);
+
     return (
         <div className="container mx-auto p-6">
             <Button variant="ghost" onClick={() => navigate("/")} className="mb-6">
@@ -275,9 +281,20 @@ export default function PdfCompare() {
                         <div className="grid grid-cols-12 gap-6 h-[calc(100vh-28rem)]">
                             <div className="col-span-4">
                                 <h2 className="text-lg font-bold mb-2">元のPDF</h2>
-                                <Document file={pdf1}>
-                                    <Page pageNumber={1} />
-                                </Document>
+                                <div style={{ display: 'flex' }}>
+                                    <div style={{ position: 'relative', width: '100%' }}>
+                                        <Document file={pdf1}>
+                                            <Page pageNumber={1} />
+                                        </Document>
+                                    </div>
+                                </div>
+                                <DiffDisplay 
+                                    differences={differences} 
+                                    text={pdf1Text} 
+                                    side="left" 
+                                    selectedDiffIndex={selectedDiffIndex} 
+                                    onDiffClick={jumpToDiff} 
+                                />
                             </div>
                             <DiffList
                                 differences={differences}
@@ -286,9 +303,20 @@ export default function PdfCompare() {
                             />
                             <div className="col-span-4">
                                 <h2 className="text-lg font-bold mb-2">新しいPDF</h2>
-                                <Document file={pdf2}>
-                                    <Page pageNumber={1} />
-                                </Document>
+                                <div style={{ display: 'flex' }}>
+                                    <div style={{ position: 'relative', width: '100%' }}>
+                                        <Document file={pdf2}>
+                                            <Page pageNumber={1} />
+                                        </Document>
+                                    </div>
+                                </div>
+                                <DiffDisplay 
+                                    differences={differences} 
+                                    text={pdf2Text} 
+                                    side="right" 
+                                    selectedDiffIndex={selectedDiffIndex} 
+                                    onDiffClick={jumpToDiff} 
+                                />
                             </div>
                         </div>
                     </div>
