@@ -11,6 +11,7 @@ import { SimilarityCard } from '@/components/pdf-compare/SimilarityCard';
 import { DiffDisplay } from '@/components/pdf-compare/DiffDisplay';
 import { DiffList } from '@/components/pdf-compare/DiffList';
 import 'pdfjs-dist/build/pdf.worker.entry';
+import { Document, Page } from 'react-pdf';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
@@ -272,29 +273,23 @@ export default function PdfCompare() {
                         )}
 
                         <div className="grid grid-cols-12 gap-6 h-[calc(100vh-28rem)]">
-                            <DiffDisplay
-                                title="参照ファイル"
-                                fileName={pdf1?.name}
-                                differences={differences}
-                                selectedDiffIndex={selectedDiffIndex}
-                                scrollRef={leftScrollRef}
-                                onScroll={(e) => handleScroll(e, 'left')}
-                                side="left"
-                            />
+                            <div className="col-span-4">
+                                <h2 className="text-lg font-bold mb-2">元のPDF</h2>
+                                <Document file={pdf1}>
+                                    <Page pageNumber={1} />
+                                </Document>
+                            </div>
                             <DiffList
                                 differences={differences}
                                 selectedDiffIndex={selectedDiffIndex}
                                 onDiffClick={jumpToDiff}
                             />
-                            <DiffDisplay
-                                title="比較するファイル"
-                                fileName={pdf2?.name}
-                                differences={differences}
-                                selectedDiffIndex={selectedDiffIndex}
-                                scrollRef={rightScrollRef}
-                                onScroll={(e) => handleScroll(e, 'right')}
-                                side="right"
-                            />
+                            <div className="col-span-4">
+                                <h2 className="text-lg font-bold mb-2">新しいPDF</h2>
+                                <Document file={pdf2}>
+                                    <Page pageNumber={1} />
+                                </Document>
+                            </div>
                         </div>
                     </div>
                 )}
