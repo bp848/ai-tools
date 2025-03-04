@@ -39,7 +39,7 @@ export default function AudioRecorder() {
       handleTranscriptionProcess(audioBlob);
       setPendingTranscription(false);
     }
-  }, [audioBlob, pendingTranscription]);
+  }, [audioBlob, pendingTranscription, handleTranscriptionProcess]);
 
   const handleTranscriptionProcess = async (blob: Blob) => {
     if (!blob || blob.size === 0) {
@@ -70,7 +70,7 @@ export default function AudioRecorder() {
         onTranscribingStateChange: setIsTranscribing
       });
     } catch (error) {
-      console.error("文字起こしエラー:", error);
+      console.error(`文字起こしエラー: ${error}`);
       toast({
         title: "文字起こしエラー",
         description: error instanceof Error ? error.message : "文字起こし中にエラーが発生しました",
@@ -85,7 +85,7 @@ export default function AudioRecorder() {
     try {
       startRecording();
     } catch (error) {
-      console.error("録音開始中にエラーが発生しました:", error);
+      console.error(`録音開始中にエラーが発生しました: ${error}`);
       alert("録音を開始できませんでした。エラー: " + error.message);
     }
   };
@@ -108,7 +108,7 @@ export default function AudioRecorder() {
         });
       }
     } catch (error) {
-      console.error("録音停止中にエラーが発生しました:", error);
+      console.error(`録音停止中にエラーが発生しました: ${error}`);
       alert("録音を停止できませんでした。エラー: " + error.message);
     }
   };
