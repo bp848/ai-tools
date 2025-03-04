@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -82,21 +81,35 @@ export default function AudioRecorder() {
     }
   };
 
-  const handleStopRecording = async () => {
-    if (isRecording) {
-      console.log("録音停止を要求します");
-      
-      // First, mark that we want to transcribe when the audio is ready
-      setPendingTranscription(true);
-      
-      // Then stop the recording
-      stopRecording();
-      
-      // The useEffect will pick up when audioBlob becomes available
-      toast({
-        title: "録音完了",
-        description: "録音を停止しました。文字起こし処理を開始します。"
-      });
+  const onStartRecording = async () => {
+    try {
+      startRecording();
+    } catch (error) {
+      console.error("録音開始中にエラーが発生しました:", error);
+      alert("録音を開始できませんでした。エラー: " + error.message);
+    }
+  };
+
+  const onStopRecording = async () => {
+    try {
+      if (isRecording) {
+        console.log("録音停止を要求します");
+        
+        // First, mark that we want to transcribe when the audio is ready
+        setPendingTranscription(true);
+        
+        // Then stop the recording
+        stopRecording();
+        
+        // The useEffect will pick up when audioBlob becomes available
+        toast({
+          title: "録音完了",
+          description: "録音を停止しました。文字起こし処理を開始します。"
+        });
+      }
+    } catch (error) {
+      console.error("録音停止中にエラーが発生しました:", error);
+      alert("録音を停止できませんでした。エラー: " + error.message);
     }
   };
 
@@ -117,8 +130,8 @@ export default function AudioRecorder() {
             audioStream={audioStream}
             isProcessing={isProcessing}
             isTranscribing={isTranscribing}
-            onStartRecording={startRecording}
-            onStopRecording={handleStopRecording}
+            onStartRecording={onStartRecording}
+            onStopRecording={onStopRecording}
             onFileInputClick={() => {}} // 使用しない機能
           />
 
